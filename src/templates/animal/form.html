@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<article>
+    <h2>{{ "Editar" if animal else "Nuevo" }} Animal</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Nombre
+            <input type="text" name="nombre" value="{{ animal.nombre if animal else '' }}" required>
+        </label>
+        <label>Especie
+            <input type="text" name="especie" value="{{ animal.especie if animal else '' }}" required>
+        </label>
+        <label>Raza
+            <input type="text" name="raza" value="{{ animal.raza if animal else '' }}" required>
+        </label>
+        <label>Edad
+            <input type="text" name="edad" value="{{ animal.edad if animal else '' }}" required>
+        </label>
+        <label>Descripción
+            <textarea name="descripcion">{{ animal.descripcion if animal else '' }}</textarea>
+        </label>
+        <label>Foto (opcional)
+            <input type="file" name="foto" accept="image/*">
+        </label>
+        {% if animal and animal.foto %}
+        <p>Foto actual: <img src="{{ url_for('static', filename='fotos/' + animal.foto) }}" style="height:80px; border-radius:8px;"></p>
+        {% endif %}
+        {% if animal %}
+        <label>Estado
+            <select name="estado">
+                <option value="disponible" {{ "selected" if animal.estado == "disponible" }}>Disponible</option>
+                <option value="adoptado" {{ "selected" if animal.estado == "adoptado" }}>Adoptado</option>
+                <option value="en tratamiento" {{ "selected" if animal.estado == "en tratamiento" }}>En tratamiento</option>
+            </select>
+        </label>
+        {% endif %}
+        <button type="submit">Guardar</button>
+        <a href="{{ url_for('animal.lista') }}" role="button" class="secondary">Cancelar</a>
+    </form>
+</article>
+{% endblock %}

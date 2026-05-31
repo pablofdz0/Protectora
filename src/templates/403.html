@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<article style="text-align:center; padding:3rem;">
+    <h1>403</h1>
+    <p>No tienes permiso para acceder a esta página.</p>
+    <a href="{{ url_for('animal.lista') }}" role="button">Volver al inicio</a>
+</article>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protectora Animal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+    <nav class="container">
+        <ul>
+            <li><strong>🐾 Protectora Animal</strong></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('animal.lista') }}">Animales</a></li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_veterinario() %}
+                <li><a href="{{ url_for('adopcion.lista') }}">Adopciones</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión ({{ current_user.nombre }})</a></li>
+            {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Iniciar sesión</a></li>
+                <li><a href="{{ url_for('auth.registro') }}">Registrarse</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Solicitudes de adopción</h2>
+
+{% if adopciones %}
+<table>
+    <thead>
+        <tr>
+            <th>Animal</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Notas</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for adopcion, animal in adopciones %}
+        <tr>
+            <td><a href="{{ url_for('animal.detalle', oid=animal.__oid__) }}">{{ animal.nombre }}</a></td>
+            <td>{{ adopcion.fecha }}</td>
+            <td>{{ adopcion.estado }}</td>
+            <td>{{ adopcion.notas }}</td>
+            <td>
+                {% if adopcion.estado == "pendiente" %}
+                <a href="{{ url_for('adopcion.gestionar', oid=adopcion.__oid__, accion='aprobada') }}"
+                   onclick="return confirm('¿Aprobar adopción?')">Aprobar</a> |
+                <a href="{{ url_for('adopcion.gestionar', oid=adopcion.__oid__, accion='rechazada') }}"
+                   onclick="return confirm('¿Rechazar adopción?')">Rechazar</a>
+                {% else %}
+                {{ adopcion.estado }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay solicitudes de adopción.</p>
+{% endif %}
+{% endblock %}

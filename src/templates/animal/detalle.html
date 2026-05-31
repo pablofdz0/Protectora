@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>{{ animal.nombre }}</h2>
+    {% if current_user.is_authenticated and current_user.is_veterinario() %}
+    <div>
+        <a href="{{ url_for('animal.editar', oid=animal.__oid__) }}" role="button" class="secondary">Editar</a>
+        <a href="{{ url_for('animal.eliminar', oid=animal.__oid__) }}" role="button" class="contrast"
+           onclick="return confirm('¿Eliminar este animal?')">Eliminar</a>
+    </div>
+    {% endif %}
+</div>
+
+<table>
+    <tr><th>Especie</th><td>{{ animal.especie }}</td></tr>
+    <tr><th>Raza</th><td>{{ animal.raza }}</td></tr>
+    <tr><th>Edad</th><td>{{ animal.edad }}</td></tr>
+    <tr><th>Estado</th><td>{{ animal.estado }}</td></tr>
+    <tr><th>Descripción</th><td>{{ animal.descripcion }}</td></tr>
+    <tr><th>Fecha entrada</th><td>{{ animal.fecha_entrada }}</td></tr>
+</table>
+
+<hr>
+
+{% if current_user.is_authenticated and current_user.is_veterinario() %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+    <h3>Historial médico</h3>
+    <a href="{{ url_for('historial.nuevo', animal_oid=animal.__oid__) }}" role="button">+ Añadir entrada</a>
+</div>
+{% else %}
+<h3>Historial médico</h3>
+{% endif %}
+
+{% if historial %}
+<table>
+    <thead>
+        <tr><th>Fecha</th><th>Veterinario</th><th>Descripción</th><th>Tratamiento</th>
+        {% if current_user.is_authenticated and current_user.is_veterinario() %}<th></th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for h in historial %}
+        <tr>
+            <td>{{ h.fecha }}</td>
+            <td>{{ h.veterinario }}</td>
+            <td>{{ h.descripcion }}</td>
+            <td>{{ h.tratamiento }}</td>
+            {% if current_user.is_authenticated and current_user.is_veterinario() %}
+            <td>
+                <a href="{{ url_for('historial.eliminar', oid=h.__oid__, animal_oid=animal.__oid__) }}"
+                   onclick="return confirm('¿Eliminar?')">Eliminar</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Sin entradas médicas.</p>
+{% endif %}
+
+<hr>
+
+<div style="display:flex; justify-content:space-between; align-items:center;">
+    <h3>Adopciones</h3>
+    {% if animal.estado == "disponible" %}
+        {% if current_user.is_authenticated and not current_user.is_veterinario() %}
+        <a href="{{ url_for('adopcion.solicitar', animal_oid=animal.__oid__) }}" role="button">Solicitar adopción</a>
+        {% elif not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.login') }}" role="button">Inicia sesión para adoptar</a>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% if current_user.is_authenticated and current_user.is_veterinario() %}
+{% if adopciones %}
+<table>
+    <thead>
+        <tr><th>Fecha</th><th>Estado</th><th>Notas</th></tr>
+    </thead>
+    <tbody>
+        {% for a in adopciones %}
+        <tr>
+            <td>{{ a.fecha }}</td>
+            <td>{{ a.estado }}</td>
+            <td>{{ a.notas }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Sin solicitudes de adopción.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

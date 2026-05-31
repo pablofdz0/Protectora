@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align:center; padding:3rem 1rem;">
+    <h1>🐾 Protectora Animal</h1>
+    <p style="font-size:1.2rem; color:#666; max-width:600px; margin:0 auto 2rem;">
+        Encuentra a tu compañero ideal. Todos nuestros animales buscan un hogar lleno de amor.
+    </p>
+    <a href="{{ url_for('animal.lista') }}" role="button" style="font-size:1.1rem; padding:0.8rem 2rem;">
+        Ver animales en adopción
+    </a>
+    {% if not current_user.is_authenticated %}
+    <p style="margin-top:1.5rem; color:#888;">
+        ¿Quieres gestionar la protectora?
+        <a href="{{ url_for('auth.registro') }}">Regístrate</a> o
+        <a href="{{ url_for('auth.login') }}">inicia sesión</a>.
+    </p>
+    {% endif %}
+</div>
+
+<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1.5rem; margin-top:2rem;">
+    <article style="text-align:center; padding:1.5rem;">
+        <div style="font-size:3rem;">🐶</div>
+        <h3>Animales</h3>
+        <p>Consulta todos los animales disponibles para adopción.</p>
+    </article>
+    <article style="text-align:center; padding:1.5rem;">
+        <div style="font-size:3rem;">🏥</div>
+        <h3>Historial médico</h3>
+        <p>Cada animal tiene su historial médico actualizado.</p>
+    </article>
+    <article style="text-align:center; padding:1.5rem;">
+        <div style="font-size:3rem;">❤️</div>
+        <h3>Adopciones</h3>
+        <p>Solicita la adopción de tu compañero favorito fácilmente.</p>
+    </article>
+</div>
+{% endblock %}

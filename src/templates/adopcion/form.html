@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<article>
+    <h2>Solicitar adopción — {{ animal.nombre }}</h2>
+    <form method="POST">
+        <label>Notas / Motivo
+            <textarea name="notas" required></textarea>
+        </label>
+        <button type="submit">Enviar solicitud</button>
+        <a href="{{ url_for('animal.detalle', oid=animal.__oid__) }}" role="button" class="secondary">Cancelar</a>
+    </form>
+</article>
+{% endblock %}

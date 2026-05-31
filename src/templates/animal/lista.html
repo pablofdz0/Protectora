@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Animales</h2>
+    {% if current_user.is_authenticated and current_user.is_veterinario() %}
+    <a href="{{ url_for('animal.nuevo') }}" role="button">+ Añadir animal</a>
+    {% endif %}
+</div>
+
+{% if animales %}
+<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1.5rem; margin-top:1rem;">
+    {% for animal in animales %}
+    <article style="padding:0; overflow:hidden; border-radius:12px; display:flex; flex-direction:column;">
+        {% if animal.foto %}
+        <img src="{{ url_for('static', filename='fotos/' + animal.foto) }}"
+             style="width:100%; height:200px; object-fit:cover;">
+        {% else %}
+        <div style="width:100%; height:200px; background:#e0e0e0; display:flex; align-items:center; justify-content:center; font-size:4rem;">
+            {% if animal.especie|lower == "perro" %}🐶
+            {% elif animal.especie|lower == "gato" %}🐱
+            {% else %}🐾{% endif %}
+        </div>
+        {% endif %}
+        <div style="padding:1rem; display:flex; flex-direction:column; flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0;">{{ animal.nombre }}</h3>
+                <small style="padding:2px 6px; border-radius:20px; font-size:0.7rem; white-space:nowrap;
+                    background:{% if animal.estado == 'disponible' %}#d4edda; color:#155724;
+                    {% elif animal.estado == 'adoptado' %}#f8d7da; color:#721c24;
+                    {% else %}#f0f0f0; color:#333;{% endif %}">
+                    {{ animal.estado }}
+                </small>
+            </div>
+            <p style="margin:0.3rem 0; color:#666;">{{ animal.especie }} · {{ animal.raza }}</p>
+            <p style="margin:0.3rem 0; color:#666;">{{ animal.edad }}</p>
+            <p style="margin:0.5rem 0; font-size:0.9rem;">{{ animal.descripcion[:80] }}{% if animal.descripcion|length > 80 %}...{% endif %}</p>
+            <div style="display:flex; gap:0.5rem; margin-top:auto; padding-top:0.8rem;">
+                <a href="{{ url_for('animal.detalle', oid=animal.__oid__) }}" role="button" style="flex:1; text-align:center; font-size:0.85rem; padding:0.4rem;">Ver</a>
+                {% if current_user.is_authenticated and current_user.is_veterinario() %}
+                <a href="{{ url_for('animal.editar', oid=animal.__oid__) }}" role="button" class="secondary" style="font-size:0.85rem; padding:0.4rem;">Editar</a>
+                <a href="{{ url_for('animal.eliminar', oid=animal.__oid__) }}" role="button" class="contrast" style="font-size:0.85rem; padding:0.4rem;"
+                   onclick="return confirm('¿Eliminar este animal?')">✕</a>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p>No hay animales registrados.</p>
+{% endif %}
+{% endblock %}

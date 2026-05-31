@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<article>
+    <h2>Nueva entrada médica — {{ animal.nombre }}</h2>
+    <form method="POST">
+        <label>Veterinario
+            <input type="text" name="veterinario" required>
+        </label>
+        <label>Descripción
+            <textarea name="descripcion" required></textarea>
+        </label>
+        <label>Tratamiento
+            <textarea name="tratamiento"></textarea>
+        </label>
+        <button type="submit">Guardar</button>
+        <a href="{{ url_for('animal.detalle', oid=animal.__oid__) }}" role="button" class="secondary">Cancelar</a>
+    </form>
+</article>
+{% endblock %}
